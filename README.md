@@ -1,5 +1,7 @@
 # Film Dust Retouch 1.1
 
+<img align="right" width="110" src="icon.png">
+
 **A lightweight Windows tool for retouching PNG frame sequences.**
 
 Film Dust Retouch is designed for frame-by-frame cleanup of animation, film
