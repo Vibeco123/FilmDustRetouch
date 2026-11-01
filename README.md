@@ -1,4 +1,4 @@
-# Film Dust Retouch 1.0
+# Film Dust Retouch 1.1
 
 **A lightweight Windows tool for retouching PNG frame sequences.**
 
