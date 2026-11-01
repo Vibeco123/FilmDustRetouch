@@ -1,0 +1,11 @@
+[package]
+name = "photocraft-raster"
+version = "0.18.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+[dependencies]
+photocraft-geom = { path = "../geom" }
+photocraft-color = { path = "../color" }
+serde = { version = "1", features = ["derive"] }
+[ target.'cfg(not(target_arch = "wasm32"))'.dependencies ]
+rayon = "1"

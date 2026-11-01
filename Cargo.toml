@@ -1,0 +1,13 @@
+[package]
+name = "film_dust_heal"
+version = "0.2.0"
+edition = "2024"
+license = "MIT"
+
+[lib]
+name = "film_dust_heal"
+crate-type = ["cdylib"]
+
+[dependencies]
+photocraft-algo = { path = "vendor/algo" }
+photocraft-raster = { path = "vendor/raster" }

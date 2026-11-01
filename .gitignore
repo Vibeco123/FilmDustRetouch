@@ -1,0 +1,20 @@
+# Rust build output
+/target/
+
+# Generated Windows build output
+/publish/
+/FilmDustRetouch_res.o
+/film_dust_heal.dll
+
+# IDE / OS files
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+Thumbs.db
+.DS_Store
+
+# Local test images and backups
+/test_images/
+*.bak
