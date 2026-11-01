@@ -102,6 +102,16 @@ preserved in [`third_party/photocraft/`](third_party/photocraft/). See
 Film Dust Retouch is an independent project and is not affiliated with,
 endorsed by, or sponsored by the PhotoCraft project or its contributors.
 
+---
+
+## Support the project
+
+If you find Film Dust Retouch useful, you can support its development via Monobank.
+
+[![Monobank QR Code](monobank-qr.png)](https://send.monobank.ua/jar/4uGrBkA4ub)
+
+[Support via Monobank](https://send.monobank.ua/jar/4uGrBkA4ub)
+
 ## Author
 
 **Vibeco**
