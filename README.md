@@ -1,111 +1,121 @@
-# Film Dust Retouch 
+# Film Dust Retouch
 
 <img align="right" width="110" src="icon.png">
 
-**A lightweight Windows tool for retouching PNG frame sequences.**
+**A lightweight Windows application for frame-by-frame retouching of PNG image sequences.**
 
-FilmDustRetouch is designed for frame-by-frame cleanup of animation, film scans, and other image sequences. It combines a native C++ Windows interface with a Rust image-processing library.
+Film Dust Retouch is designed for cleaning animation frames, film scans, and other image sequences. It combines a native C++ Windows interface with a Rust image-processing library and PhotoCraft-based restoration and painting tools.
 
 ## Tools
 
-### Advanced Remove
+### Spot Healing
 
-Paint over dust, spots, scratches, or other unwanted marks. The tool automatically completes the painted region using nearby image content.
+Restore small defects using surrounding image content. Multiple dabs in one stroke are combined into a single mask and processed when the stroke ends.
 
-It is based on PhotoCraft's patch-based non-local inpainting implementation, with loop closing, mask expansion, and gradient-domain blending.
+### Remove
 
-### Pencil
+Automatically remove dust, spots, scratches, and other unwanted marks. Paint over the damaged area; the tool reconstructs it using nearby image content.
 
-A pixel-level drawing tool for precise manual retouching. Adjust the brush size and paint directly onto the image.
+Based on PhotoCraft's patch-based non-local inpainting implementation, with loop closing, mask expansion, and gradient-domain blending.
+
+### Healing Brush
+
+Sample a source point with Alt + left-click, then paint using the sampled image content. The source is preserved independently of subsequent frame navigation, making it possible to copy details from another frame.
 
 ### Clone Stamp
 
-Copy pixels from another area of the image to cover unwanted imperfections. Choose a source point and paint over the destination. The tool copies pixels directly, without automatic colour or lighting adaptation.
+Copy pixels directly from a sampled source point. Hold Alt and left-click to select the source. Unlike the Healing Brush, Clone Stamp does not automatically adapt colour or lighting.
+
+### Pencil
+
+A pixel-level drawing tool for precise manual retouching. Uses PhotoCraft's hard-edged Pencil engine, with strokes aligned to the pixel grid. Hold Alt to preview the pixel colour beneath the crosshair; Alt + left-click captures that colour for painting.
+
+### Additional Tools
+
+- **Blur** — locally blur image content.
+- **Sharpen** — locally sharpen image details.
+- **Smudge** — smear and blend image content.
+- **Dodge** — lighten midtones.
+- **Burn** — darken midtones.
 
 ## Controls
 
 | Action | Control |
 |---|---|
-| Advanced Remove | `1` |
-| Pencil | `2` |
-| Clone Stamp | `3` |
+| Spot Healing | `1` |
+| Remove | `2` |
+| Healing Brush | `3` |
+| Clone Stamp | `4` |
+| Pencil | `5` |
+| Blur | `6` |
+| Sharpen | `7` |
+| Smudge | `8` |
+| Dodge | `9` |
+| Burn | `0` |
 | Paint with the active tool | Left mouse button |
-| Set source point for Clone Stamp | Right mouse button |
+| Sample source for Healing Brush / Clone Stamp | `Alt` + left-click |
+| Preview / capture colour with Pencil | Hold `Alt` / `Alt` + left-click |
 | Previous / next frame | `A` / `D` |
 | Previous / next frame | Left / Right arrow |
-| Copy from previous frame | Hold `W` or Up arrow |
-| Copy from next frame | Hold `S` or Down arrow |
+| Fast frame seeking | Hold `Shift` while navigating |
+| Go to frame by number or filename | `N` |
+| Copy from previous frame | Hold `S` or Down arrow + left mouse button |
+| Copy from next frame | Hold `W` or Up arrow + left mouse button |
 | Undo | `Ctrl+Z` |
 | Redo | `Ctrl+Shift+Z` |
 | Zoom around cursor | Mouse wheel |
 | Change brush size | `Shift` + mouse wheel |
-| Pan image | Hold `Space` + drag |
-| Open another folder | `Ctrl+O` |
+| Pan image | Hold `Space` + drag, or middle mouse button + drag |
+| Toggle zoom and pan lock between frames | `V` |
+| Fit image to window | `F` |
 | Toggle fullscreen | `Alt+Enter` |
-| Exit fullscreen / clear source point | `Esc` |
+| Exit fullscreen / fit image | `Esc` |
+| Show information panel | `I` |
+| Open another folder | `Ctrl+O` |
+| Show current PNG in Explorer | `Ctrl+Shift+O` |
 | Keyboard shortcuts and localized help | `F1` |
-| Donation QR code | `F12` |
+| Project support window | `F12` |
 
-Undo and Redo history is maintained separately for each frame. Switching between frames does not erase the editing history.
+### Brush Settings
 
-Modified frames are saved automatically when switching frames or closing the application.
+Right-click opens the settings for the active tool.
+
+Brush size is shared across all tools. Hardness applies to soft-edged tools; Pencil always uses hard edges. Intensity is used by Blur, Sharpen, and Smudge, while Exposure is used by Dodge and Burn.
+
+Settings are global and remain unchanged when switching tools.
+
+### Frame Navigation
+
+Tap `A` / `D` or the Left / Right arrow keys to move one frame. Holding a key starts playback at approximately 6 fps. Navigation loops at both ends of the sequence.
+
+While holding a navigation key, press and release `Shift` to switch between normal playback and fast seeking at approximately 60 frame indices per second. During fast seeking, the last decoded frame remains visible; the selected target frame is loaded when the navigation key is released.
+
+Decoded neighbouring frames are cached in RAM, up to three frames before and three frames after the current frame.
+
+### Undo and Redo
+
+Undo and Redo history is maintained separately for each frame. Up to eight Undo steps and the corresponding Redo history are retained while a frame remains in the RAM cache. One completed stroke creates one history entry.
+
+### Saving
+
+Modified PNG files are saved automatically when switching frames and when closing the application. Unmodified frames are not rewritten.
+
+The application writes to a temporary file and replaces the original PNG after a successful write. Make a backup of your source sequence before the first retouching session.
 
 ## Requirements
 
-- Windows 10 or later, 64-bit
-- Rust stable toolchain: `x86_64-pc-windows-gnu`
-- MinGW-w64 x86_64, including `g++`, `gcc`, and `windres`
-- Cargo available in `PATH`
+- Windows 10 or later, 64-bit.
+- Rust stable toolchain with the `x86_64-pc-windows-gnu` target.
+- MinGW-w64 x86_64, including `g++`, `gcc`, `windres`, and `dlltool`.
+- Cargo available in `PATH`.
 
-The build script automatically adds `C:\mingw64\bin` to `PATH` if that folder exists. Otherwise, make sure your MinGW-w64 `bin` directory is already in `PATH`.
+The build script automatically adds `C:\mingw64\bin` to `PATH` if that directory exists. Otherwise, make sure your MinGW-w64 `bin` directory is already in `PATH`.
 
-## Build from source
+## Build from Source
 
 1. Install Rust using [rustup](https://www.rust-lang.org/tools/install).
-2. Install the GNU Rust toolchain:
+2. Install and select the GNU Rust toolchain:
 
    ```cmd
    rustup toolchain install stable-x86_64-pc-windows-gnu
    rustup default stable-x86_64-pc-windows-gnu
-   ```
-
-3. Install MinGW-w64 x86_64 and make sure `g++`, `gcc`, and `windres` are available in Command Prompt.
-4. Open the project folder and run `build.bat`.
-5. The build script compiles the Rust DLL and the C++ application. The output is placed in `publish`:
-
-   - `publish\FilmDustRetouch.exe`
-   - `publish\film_dust_heal.dll`
-
-On the first build, Cargo may download crates from crates.io. Keep the EXE and DLL in the same folder when running the application.
-
-## Usage notes
-
-- Open a folder containing PNG frames.
-- Work on copies of important source frames until you are comfortable with the workflow.
-- Modified PNG frames are saved automatically; unmodified frames are not rewritten.
-- Undo and Redo history is stored separately for each frame and retained when navigating between frames.
-- The application uses RAM caching to keep nearby frames readily available during navigation.
-- Automatic Remove can take longer on large painted regions.
-- Settings are stored in an INI file alongside the application.
-
-## Credits and licensing
-
-FilmDustRetouch's original code is released under the MIT License. See [`LICENSE`](LICENSE).
-
-This project incorporates and adapts code from **PhotoCraft 0.18.0** under its MIT OR Apache-2.0 licensing. The original license texts and notices are preserved in [`third_party/photocraft/`](third_party/photocraft/). See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for details.
-
-FilmDustRetouch is an independent project and is not affiliated with, endorsed by, or sponsored by the PhotoCraft project or its contributors.
-
----
-
-## Support the project
-
-If you find FilmDustRetouch useful, you can support its development via Monobank.
-
-[![Monobank QR Code](monobank-qr.png)](https://send.monobank.ua/jar/4uGrBkA4ub)
-
-[Support via Monobank](https://send.monobank.ua/jar/4uGrBkA4ub)
-
-## Author
-
-**Vibeco**
